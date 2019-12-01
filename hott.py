@@ -9,3 +9,6 @@ def HOTT(u,v,u_weight,v_weight,prior = -999): ### u and v take LDA topic proport
     u_weight_new =u_weight[np.where(u>prior)];
     v_weight_new = v_weight[np.where(v>prior)];
     return wasserstein_distance(u_new,v_new,u_weight_new, v_weight_new)
+
+def HOFTT(u,v,u_weight,v_weight)
+    return wasserstein_distance(u,v,u_weight, v_weight)
