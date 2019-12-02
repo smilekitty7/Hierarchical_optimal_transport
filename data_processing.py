@@ -179,7 +179,7 @@ def loader(data_path,
     embeddings = np.array([vocab_embed[w] for w in vocab])
 
 
-    model = lda.LDA(n_topics=K, n_iter=1500, random_state=1)
+    model = lda.LDA(n_topics=K_lda, n_iter=1500, random_state=1)
     model.fit(vocab_BOW)
     topics = model.topic_word_
     lda_centers = np.matmul(topics, embeddings)
