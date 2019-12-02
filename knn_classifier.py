@@ -1,20 +1,23 @@
 # build classifer
 # -*- coding: utf-8 -*-
 
+# -*- coding: utf-8 -*-
+
 import operator
 import numpy as np
 from collections import Counter
 
 
 def knnclassify(test,x_train,y_train,k,method):
-    distances = []
-    
+    distances=[]
     for x in range(len(x_train)):
-        dist = method(test, x)
-        distances.append(dist)
-    neighbor_inx=np.argsort(dist)[:k]
+        distances.append(method(test, x_train[x]))
+    #print("dist",distances)
+    #print("hhhhhhhhhhhhhhhhhh")
+    neighbor_inx=np.argsort(distances)[:k]
     neighbors = []
-    for x in range(k):
+    for x in range(len(neighbor_inx)):
+        
         neighbors.append(y_train[neighbor_inx[x]])  
     
 #    classvote={}
@@ -36,13 +39,23 @@ def myknn(k,x_train,y_train,x_test,y_test,method):
     
     count=0
     for i in range(len(y_test)):
-        if y_pred==y_test:
+        if y_pred[i]==y_test[i]:
             count=count+1
             
             
     test_error=1-count/len(y_test)
     
     return test_error
+        
+
+
+
+
+
+
+#create own knn with our designed distance
+#k is neighbors number
+
         
 
 
