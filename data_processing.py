@@ -172,7 +172,7 @@ def loader(data_path,
 
         embed_data = []
         for doc_i in embed_dat:
-            embed_data.append(np.array(embed_doc))
+            embed_data.append(np.array(doc_i))
 
 
         # Matrix of word embeddings
