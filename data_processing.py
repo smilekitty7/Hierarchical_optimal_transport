@@ -147,62 +147,62 @@ def loader(data_path,
 
         vocab_BOW[i, words_idx] = bow_i.astype(np.int)
 
-        ####################################################
-        # Use GLOVE word embeddings
-        if glove_embeddings:
-            vocab, vocab_embed, vocab_BOW = change_embeddings(
-                vocab, vocab_BOW, embeddings_path)
-        # Reduce vocabulary by removing short words, stop words, and stemming
-        if stemming:
-            vocab, vocab_embed, vocab_BOW = reduce_vocab(
-                vocab_BOW, vocab, vocab_embed, embed_aggregate='mean')
+    ####################################################
+    # Use GLOVE word embeddings
+    if glove_embeddings:
+        vocab, vocab_embed, vocab_BOW = change_embeddings(
+            vocab, vocab_BOW, embeddings_path)
+    # Reduce vocabulary by removing short words, stop words, and stemming
+    if stemming:
+        vocab, vocab_embed, vocab_BOW = reduce_vocab(
+            vocab_BOW, vocab, vocab_embed, embed_aggregate='mean')
 
 
-        ####################################################
+    ####################################################
 
 
 
-        l1_BOW, l2_BOW = vocab_BOW.shape
-        embed_dat = [[] for _ in range(l1_BOW)]
-        for i in range(l2_BOW):
-            for d in range(l1_BOW):
-                if vocab_BOW[d, i] > 0:
-                    for _ in range(vocab_BOW[d, i]):
-                        embed_dat[d].append(vocab_embed[vocab[i]])
+    l1_BOW, l2_BOW = vocab_BOW.shape
+    embed_dat = [[] for _ in range(l1_BOW)]
+    for i in range(l2_BOW):
+        for d in range(l1_BOW):
+            if vocab_BOW[d, i] > 0:
+                for _ in range(vocab_BOW[d, i]):
+                    embed_dat[d].append(vocab_embed[vocab[i]])
 
-        embed_data = []
-        for doc_i in embed_dat:
-            embed_data.append(np.array(doc_i))
-
-
-        # Matrix of word embeddings
-        embeddings = np.array([vocab_embed[w] for w in vocab])
+    embed_data = []
+    for doc_i in embed_dat:
+        embed_data.append(np.array(doc_i))
 
 
-        model = lda.LDA(n_topics=K, n_iter=1500, random_state=1)
-        model.fit(vocab_BOW)
-        topics = model.topic_word_
-        lda_centers = np.matmul(topics, embeddings)
-        n_top_words = 20
-        for i, topic_dist in enumerate(topics):
-            topic_words = np.array(vocab)[np.argsort(topic_dist)][:-(n_top_words + 1):-1]
+    # Matrix of word embeddings
+    embeddings = np.array([vocab_embed[w] for w in vocab])
 
-        topic_proportions = model.doc_topic_
 
-        cost_embeddings = euclidean_distances(embeddings, embeddings) ** p
-        cost_topics = np.zeros((topics.shape[0], topics.shape[0]))
+    model = lda.LDA(n_topics=K, n_iter=1500, random_state=1)
+    model.fit(vocab_BOW)
+    topics = model.topic_word_
+    lda_centers = np.matmul(topics, embeddings)
+    n_top_words = 20
+    for i, topic_dist in enumerate(topics):
+        topic_words = np.array(vocab)[np.argsort(topic_dist)][:-(n_top_words + 1):-1]
 
-        for i in range(cost_topics.shape[0]):
-            for j in range(i + 1, cost_topics.shape[1]):
-                cost_topics[i, j] = ot.emd2(topics[i], topics[j], cost_embeddings)
-        cost_topics = cost_topics + cost_topics.T
+    topic_proportions = model.doc_topic_
 
-        output = {'X': vocab_BOW,
-               'y': y_all-1,
-               'embeddings': embeddings,
-               'topics': topics,
-               'proportions': topic_proportions,
-               'cost_E': cost_embeddings,
-               'cost_T': cost_topics}
+    cost_embeddings = euclidean_distances(embeddings, embeddings) ** p
+    cost_topics = np.zeros((topics.shape[0], topics.shape[0]))
 
-        return output
+    for i in range(cost_topics.shape[0]):
+        for j in range(i + 1, cost_topics.shape[1]):
+            cost_topics[i, j] = ot.emd2(topics[i], topics[j], cost_embeddings)
+    cost_topics = cost_topics + cost_topics.T
+
+    output = {'X': vocab_BOW,
+           'y': y_all-1,
+           'embeddings': embeddings,
+           'topics': topics,
+           'proportions': topic_proportions,
+           'cost_E': cost_embeddings,
+           'cost_T': cost_topics}
+
+    return output
