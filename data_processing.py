@@ -194,7 +194,7 @@ def loader(data_path,
 
     for i in range(cost_topics.shape[0]):
         for j in range(i + 1, cost_topics.shape[1]):
-            cost_topics[i, j] = ot.emd2(topics[i], topics[j], cost_embeddings)
+            cost_topics[i, j] = ot.emd2(topics[i], topics[j], cost_embeddings, numItermax =10000)
     cost_topics = cost_topics + cost_topics.T
 
     output = {'X': vocab_BOW,
