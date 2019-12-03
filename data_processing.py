@@ -42,8 +42,8 @@ def reduce_vocab(bow_data, vocab, embed_vocab, embed_aggregate='mean'):
         stemmed_bow_data[:, i] = reduced_bow_data[:, stemmed_idx_mapping[i]].sum(axis=1).flatten()
 
     word_counts = stemmed_bow_data.sum(axis=0)
-    stemmed_reduced_vocab = np.array(stemmed_vocab)[word_counts > 2].tolist()
-    stemmed_reduced_bow_data = stemmed_bow_data[:, word_counts > 2]
+    stemmed_reduced_vocab = np.array(stemmed_vocab)[word_counts > 5].tolist()
+    stemmed_reduced_bow_data = stemmed_bow_data[:, word_counts > 5]
 
     stemmed_reduced_embed_vocab = {}
     for w in stemmed_reduced_vocab:
