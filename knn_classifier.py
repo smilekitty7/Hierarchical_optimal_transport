@@ -45,7 +45,7 @@ def myknn(k,x_train,y_train,x_test,y_test,D,method):
         tempcount = tempcount+1
         print("count: ", tempcount)
     count=0
-    for i in range(len(y_test)-1):
+    for i in range(len(y_test)):
         if y_pred[i]==y_test[i]:
             count=count+1
             
