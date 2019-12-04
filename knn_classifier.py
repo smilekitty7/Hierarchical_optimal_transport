@@ -5,7 +5,7 @@
 
 def knnclassify(test,x_train,y_train,D,k,method):
     distances=[]
-    for x in range(69):
+    for x in range(len(x_train))):
         #print(x_train[x].shape)
         #wait=input("pppp enter:")
         if method == HOFTT or method == HOTT:
@@ -37,7 +37,7 @@ def myknn(k,x_train,y_train,x_test,y_test,D,method):
     y_pred=[]
     tempcount = 0
     #x_train = x_train.T
-    for i in range(len(x_test)-1):
+    for i in range(len(x_test)):
         #print(x_test[i].shape)
         #wait = input("press enter:")
         ypred_t=knnclassify(x_test[i],x_train,y_train,D,k,method)
