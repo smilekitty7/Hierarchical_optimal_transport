@@ -100,7 +100,7 @@ def embeddings_new(vocab, vocab_BOW, embed_path):
     return vocab3, emb3, BOW3
 
 
-def import(data_path,
+def iptdata(data_path,
            embeddings_path,
            T=70,
            glove_embeddings=True,
