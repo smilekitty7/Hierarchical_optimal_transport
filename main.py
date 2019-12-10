@@ -1,7 +1,7 @@
 from sklearn.preprocessing import normalize
 from sklearn.model_selection import train_test_split
 
-from data_processing import loader
+from data_processing import iptdata
 from knn import myknn
 
 import distances
@@ -14,7 +14,7 @@ data_path = './data/bbcsport-emd_tr_te_split.mat'
 # Download GloVe 6B tokens, 300d word embeddings from https://nlp.stanford.edu/projects/glove/
 embeddings_path = './data/glove.6B.300d.txt'
 
-data = loader(data_path, embeddings_path)
+data = iptdata(data_path, embeddings_path)
 
 bow_data, class = data['BOW'], data['class']
 topic_proportions = data['topic_proportions']
