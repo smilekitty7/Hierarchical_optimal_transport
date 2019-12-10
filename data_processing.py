@@ -100,10 +100,9 @@ def embeddings_new(vocab, vocab_BOW, embed_path):
     return vocab3, emb3, BOW3
 
 
-# loader
-def loader(data_path,
+def import(data_path,
            embeddings_path,
-           K_lda=70,
+           T=70,
            glove_embeddings=True,
            stemming=True):
     data_all = sio.loadmat(data_path, squeeze_me=True, chars_as_strings=True)  # dict
@@ -188,7 +187,7 @@ def loader(data_path,
     # Matrix of word embeddings
     embeddings = np.array([vocab_embed[w] for w in vocab])
 
-    model = lda.LDA(n_topics=K_lda, n_iter=1500, random_state=1)
+    model = lda.LDA(n_topics=T, n_iter=1500, random_state=1)
     model.fit(vocab_BOW)
     topics = model.topic_word_
     lda_centers = np.matmul(topics, embeddings)
@@ -213,14 +212,14 @@ def loader(data_path,
             #
             # cost_e = cost_embeddings[i_list][:,j_list]
             # # np.ascontiguousarray(topic_i)
-            # print(topic_i.flags['C_CONTIGUOUS'])
+            # print(topic_i.flags['C_CONIGUOUS'])
             # # np.ascontiguousarray(topic_j)
             # print(topic_j.flags['C_CONTIGUOUS'])
             # cost_e = np.ascontiguousarray(cost_e)
             # print(cost_e.flags['C_CONTIGUOUS'])
             # cost_m[i,j] = ot.emd2(topic_i, topic_j, cost_e, numItermax=10000)
             cost_topics[i, j] = ot.emd2(topics[i], topics[j], cost_embeddings,numItermax=10000)
-    cost_topics = cost_topics + cost_topics.T
+    cost_topics = cost_topics + transpose(cost_topics)
 
     output = {'BOW': vocab_BOW,
               'class': y_all - 1,
