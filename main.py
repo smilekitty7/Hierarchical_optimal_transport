@@ -1,10 +1,8 @@
+from data_processing import iptdata
+from knn_classifer import myknn
+import methods
 from sklearn.preprocessing import normalize
 from sklearn.model_selection import train_test_split
-
-from data_processing import iptdata
-from knn import myknn
-
-import methods
 
 
 # Download datasets used by Kusner et al from https://www.dropbox.com/sh/nf532hddgdt68ix/AABGLUiPRyXv6UL2YAcHmAFqa?dl=0
