@@ -1,38 +1,29 @@
-# load data adnd train the model using knn
 from sklearn.preprocessing import normalize
 from sklearn.model_selection import train_test_split
 
-from dataprocessing import loader
+from data_processing import loader
 from knn import myknn
 
 import distances
-import hott
 
-# Download datasets used by Kusner et al from
-# https://www.dropbox.com/sh/nf532hddgdt68ix/AABGLUiPRyXv6UL2YAcHmAFqa?dl=0
-# and put them into
-data_path = './data/'
 
-# Download GloVe 6B tokens, 300d word embeddings from
-# https://nlp.stanford.edu/projects/glove/
-# and put them into
+# Download datasets used by Kusner et al from https://www.dropbox.com/sh/nf532hddgdt68ix/AABGLUiPRyXv6UL2YAcHmAFqa?dl=0
+data_path = './data/bbcsport-emd_tr_te_split.mat'
+#data_path = './data/amazon-emd_tr_te_split.mat'
+
+# Download GloVe 6B tokens, 300d word embeddings from https://nlp.stanford.edu/projects/glove/
 embeddings_path = './data/glove.6B.300d.txt'
 
-# Pick a dataset (uncomment the line you want)
-data_name = 'bbcsport-emd_tr_te_split.mat'
-# data_name = 'amazon-emd_tr_te_split.mat'
+data = loader(data_path, embeddings_path)
 
-
-data = loader(data_path + data_name, embeddings_path, p=1)
-
-bow_data, y = data['X'], data['y']
-topic_proportions = data['proportions']
+bow_data, class = data['BOW'], data['class']
+topic_proportions = data['topic_proportions']
  ## specified in the paper using train_test_split to separate train and test sets.
 bow_train, class_train, bow_test, class_test = train_test_split(bow_data, y)
 topic_train, topic_test = train_test_split(topic_proportions)
 
-cost_bow = data['cost_E']
-cost_topic = data['cost_T']
+cost_bow = data['cost_embeddings']
+cost_topic = data['cost_topics']
 
 method = HOTT
 #method = HOFTT
