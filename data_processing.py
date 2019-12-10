@@ -103,8 +103,7 @@ def embeddings_new(vocab, vocab_BOW, embed_path):
 # loader
 def loader(data_path,
            embeddings_path,
-           p=1,
-           K_lda=3,
+           K_lda=70,
            glove_embeddings=True,
            stemming=True):
     data_all = sio.loadmat(data_path, squeeze_me=True, chars_as_strings=True)  # dict
@@ -193,13 +192,13 @@ def loader(data_path,
     model.fit(vocab_BOW)
     topics = model.topic_word_
     lda_centers = np.matmul(topics, embeddings)
-    n_top_words = 10
+    n_top_words = 20
     topic_dict = {}
     topic_proportions = model.doc_topic_
 
 
     #cost_embeddings_cos = cosine_similarity(embeddings, embeddings)
-    cost_embeddings = euclidean_distances(embeddings, embeddings)**p
+    cost_embeddings = euclidean_distances(embeddings, embeddings)**1
     cost_topics = np.zeros((topics.shape[0], topics.shape[0]))
     cost_m = np.zeros((topics.shape[0], topics.shape[0]))
 
@@ -223,12 +222,12 @@ def loader(data_path,
             cost_topics[i, j] = ot.emd2(topics[i], topics[j], cost_embeddings,numItermax=10000)
     cost_topics = cost_topics + cost_topics.T
 
-    output = {'X': vocab_BOW,
-              'y': y_all - 1,
+    output = {'BOW': vocab_BOW,
+              'class': y_all - 1,
               'embeddings': embeddings,
               'topics': topics,
-              'proportions': topic_proportions,
-              'cost_E': cost_embeddings,
-             'cost_T': cost_topics}
+              'topic_proportions': topic_proportions,
+              'cost_embeddings': cost_embeddings,
+             'cost_topics': cost_topics}
 
     return output
