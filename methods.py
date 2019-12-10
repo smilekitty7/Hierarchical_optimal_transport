@@ -28,30 +28,3 @@ def wmdT20(u,v):
 
     return wasserstein_distance(u_t20,v_t20)
 
-#### RWMD: code modified from https://github.com/mkusner/wmd/blob/master/compute_rwmd.m
-def RWMD(u,v,u_BOW,v_BOW):
-    import math
-    temp = np.arange(len(u_BOW))
-    n = len(u_BOW)
-    RWMD_D = np.zeros(n,n)
-    DD = np.sum((np.array(u) - np.array(v))**2)
-    for i in temp:
-        Ei = np.zeros(1,n)
-        for j in temp:
-            if len(u_BOW[i])>0 or len(v_BOW[i])>0:
-                Ei[j]= math.inf
-            else:
-                x1 = u_BOW[i]/u_BOW[i].sum();
-                x2 = v_BOW[i]/v_BOW[i].sum();
-
-                m1 = np.sqrt(max(min(DD[i]),0)); 
-                m2 = np.sqrt(max(min(DD[i]),0)); 
-                dist1 = m1*x2;
-                dist2 = m2*x1;
-
-            Ei[j] = max(dist1,dist2)
-            
-        RWMD_D[i] = Ei;
-
-    return RWMD_D
-# wcd
