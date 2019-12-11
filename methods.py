@@ -2,12 +2,12 @@
 ## Cost might be normalized BOW.
 import ot
 
-def wmd(u,v): 
+def WMD(u,v): 
     u = np.ascontiguousarray(u)
     v = np.ascontiguousarray(v)
    return ot.emd2(u,v,C)
 
-def wmdt20(u, v, C):
+def WMDT20(u, v, C):
     idx_u = np.argsort(u)
     idx_v = np.argsort(v)
     u_t20 = np.zeros(len(idx_u[-20:]))
