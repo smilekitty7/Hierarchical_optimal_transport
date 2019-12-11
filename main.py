@@ -15,7 +15,7 @@ embeddings_path = './data/glove.6B.300d.txt'
 data = iptdata(data_path, embeddings_path)
 
 bow_data= data['BOW']
-classes =  data['classes'] 
+classes =  data['class'] 
 topic_proportions = data['topic_proportions']
  ## specified in the paper using train_test_split to separate train and test sets.
 bow_train, class_train, bow_test, class_test = train_test_split(bow_data, classes)
