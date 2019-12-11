@@ -1,7 +1,6 @@
 import numpy as np
-import lda
+from sklearn.decomposition import LatentDirichletAllocation as lda
 import ot
-
 from sklearn.metrics.pairwise import euclidean_distances, cosine_similarity
 import scipy.io as sio
 from nltk.corpus import stopwords
@@ -187,14 +186,12 @@ def iptdata(data_path,
     # Matrix of word embeddings
     embeddings = np.array([vocab_embed[w] for w in vocab])
 
-    model = lda.LDA(n_topics=T, n_iter=1500, random_state=1)
+    model = lda(n_components=K, random_state=1)
     model.fit(vocab_BOW)
-    topics = model.topic_word_
-    lda_centers = np.matmul(topics, embeddings)
+    topics = model.components_
     n_top_words = 20
     topic_dict = {}
-    topic_proportions = model.doc_topic_
-
+    topic_proportions = model.transform(vocab_BOW)
 
     #cost_embeddings_cos = cosine_similarity(embeddings, embeddings)
     cost_embeddings = euclidean_distances(embeddings, embeddings)**1
@@ -219,14 +216,9 @@ def iptdata(data_path,
             # print(cost_e.flags['C_CONTIGUOUS'])
             # cost_m[i,j] = ot.emd2(topic_i, topic_j, cost_e, numItermax=10000)
             cost_topics[i, j] = ot.emd2(topics[i], topics[j], cost_embeddings,numItermax=10000)
-    cost_topics = cost_topics + transpose(cost_topics)
+    cost_topics = cost_topics + np.transpose(cost_topics)
 
-    output = {'BOW': vocab_BOW,
-              'class': y_all - 1,
-              'embeddings': embeddings,
-              'topics': topics,
-              'topic_proportions': topic_proportions,
-              'cost_embeddings': cost_embeddings,
+    outputs = {'BOW': vocab_BOW,'class': y_all - 1,'topic_proportions': topic_proportions,'cost_embeddings': cost_embeddings,
              'cost_topics': cost_topics}
 
-    return output
+    return outputs
